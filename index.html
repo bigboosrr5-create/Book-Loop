@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BookLoop | Books That Keep Moving</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+
+    <div class="logo">
+        📚 <span>Book</span>Loop
+    </div>
+
+    <button class="header-btn" onclick="openForm('sell')">
+        + List Your Book
+    </button>
+
+</header>
+
+
+<!-- HERO -->
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-books">
+            📕 📗 📘
+        </div>
+
+        <p class="small-title">
+            A COMMUNITY FOR BOOK LOVERS
+        </p>
+
+        <h1>
+            Books deserve a<br>
+            <span>new chapter.</span>
+        </h1>
+
+        <p class="hero-text">
+            Sell the books you've finished, exchange them for
+            something new, or donate them to someone who needs them.
+        </p>
+
+        <button class="main-btn" onclick="openForm('sell')">
+            📚 List Your Book
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- THREE OPTIONS -->
+<section class="options">
+
+    <div class="option-card" onclick="openForm('sell')">
+
+        <div class="option-icon">💰</div>
+
+        <h2>Sell Your Book</h2>
+
+        <p>
+            Give your old books a new reader and
+            earn a fair price.
+        </p>
+
+        <span>Sell a Book →</span>
+
+    </div>
+
+
+    <div class="option-card" onclick="openForm('exchange')">
+
+        <div class="option-icon">🔄</div>
+
+        <h2>Exchange Book</h2>
+
+        <p>
+            Have a book you don't need?
+            Exchange it for the one you want.
+        </p>
+
+        <span>Exchange →</span>
+
+    </div>
+
+
+    <div class="option-card" onclick="openForm('donate')">
+
+        <div class="option-icon">🎁</div>
+
+        <h2>Donate Book</h2>
+
+        <p>
+            Share knowledge and help another
+            reader discover a great book.
+        </p>
+
+        <span>Donate →</span>
+
+    </div>
+
+</section>
+
+
+<!-- EXPLORE -->
+<section class="explore">
+
+    <div class="section-title">
+
+        <p>COMMUNITY LIBRARY</p>
+
+        <h2>Explore Books</h2>
+
+        <span>
+            Discover books shared by readers.
+        </span>
+
+    </div>
+
+
+    <div class="book-grid" id="bookGrid">
+
+        <!-- DEMO BOOK 1 -->
+
+        <div class="book-card">
+
+            <div class="book-image purple">
+                📘
+            </div>
+
+            <div class="book-info">
+
+                <span class="tag">FOR SALE</span>
+
+                <h3>Engineering Mathematics</h3>
+
+                <p>📖 Mathematics</p>
+
+                <p>📍 Bikaner</p>
+
+                <div class="book-bottom">
+
+                    <strong>₹250</strong>
+
+                    <button onclick="showMessage()">
+                        View
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DEMO BOOK 2 -->
+
+        <div class="book-card">
+
+            <div class="book-image orange">
+                📕
+            </div>
+
+            <div class="book-info">
+
+                <span class="tag exchange">
+                    EXCHANGE
+                </span>
+
+                <h3>Higher Physics</h3>
+
+                <p>📖 Physics</p>
+
+                <p>📍 Bikaner</p>
+
+                <div class="book-bottom">
+
+                    <strong>Exchange</strong>
+
+                    <button onclick="showMessage()">
+                        View
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DEMO BOOK 3 -->
+
+        <div class="book-card">
+
+            <div class="book-image green">
+                📗
+            </div>
+
+            <div class="book-info">
+
+                <span class="tag donate">
+                    DONATE
+                </span>
+
+                <h3>Computer Fundamentals</h3>
+
+                <p>📖 Computer Science</p>
+
+                <p>📍 Bikaner</p>
+
+                <div class="book-bottom">
+
+                    <strong>Free</strong>
+                    <button onclick="showMessage()">
+                        View
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- WHY BOOKLOOP -->
+<section class="why">
+
+    <div class="section-title">
+
+        <p>WHY BOOKLOOP?</p>
+
+        <h2>One book. A new reader.</h2>
+
+    </div>
+
+
+    <div class="why-grid">
+
+        <div>
+            <span>♻️</span>
+            <h3>Reuse</h3>
+            <p>
+                Give books a second life instead of
+                leaving them unused.
+            </p>
+        </div>
+
+        <div>
+            <span>🤝</span>
+            <h3>Connect</h3>
+            <p>
+                Connect directly with people looking
+                for books.
+            </p>
+        </div>
+
+        <div>
+            <span>📚</span>
+            <h3>Learn</h3>
+            <p>
+                Make knowledge easier to access
+                for everyone.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+
+    <div class="footer-logo">
+        📚 BookLoop
+    </div>
+
+    <p>
+        Books keep moving. Knowledge keeps growing.
+    </p>
+
+    <small>
+        © 2026 BookLoop Community
+    </small>
+
+</footer>
+
+
+<!-- FORM MODAL -->
+<div class="modal" id="formModal">
+
+    <div class="form-box">
+
+        <button class="close" onclick="closeForm()">
+            ×
+        </button>
+
+
+        <div class="form-header">
+
+            <span id="formIcon">💰</span>
+
+            <div>
+                <p id="formType">
+                    SELL YOUR BOOK
+                </p>
+
+                <h2 id="formTitle">
+                    Sell Your Book
+                </h2>
+            </div>
+
+        </div>
+
+
+        <p class="form-note" id="formNote">
+            Enter your book details below.
+        </p>
+
+
+        <form id="bookForm">
+
+            <label>
+                Book Title *
+            </label>
+
+            <input
+                type="text"
+                id="bookTitle"
+                placeholder="Enter book name"
+                required
+            >
+
+
+            <label>
+                Author
+            </label>
+
+            <input
+                type="text"
+                id="author"
+                placeholder="Author name"
+            >
+
+
+            <div class="two">
+
+                <div>
+
+                    <label>
+                        Category
+                    </label>
+
+                    <input
+                        type="text"
+                        id="category"
+                        placeholder="Mathematics"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Course / Class
+                    </label>
+
+                    <input
+                        type="text"
+                        id="course"
+                        placeholder="B.Sc / Class 12"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="two">
+
+                <div>
+
+                    <label>
+                        Semester
+                    </label>
+
+                    <input
+                        type="text"
+                        id="semester"
+                        placeholder="Semester"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Condition
+                    </label>
+
+                    <select id="condition">
+
+                        <option>
+                            Like New
+                        </option>
+
+                        <option>
+                            Very Good
+                        </option>
+
+                        <option>
+                            Good
+                        </option>
+
+                        <option>
+                            Used
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRICE -->
+
+            <div id="priceField">
+                <label>
+                    Price ₹
+                </label>
+
+                <input
+                    type="number"
+                    id="price"
+                    placeholder="Enter expected price"
+                >
+
+            </div>
+
+
+            <!-- WANTED BOOK -->
+
+            <div id="wantedField" class="hide">
+
+                <label>
+                    🔄 Which book do you want?
+                </label>
+
+                <input
+                    type="text"
+                    id="wantedBook"
+                    placeholder="Book you want in exchange"
+                >
+
+            </div>
+
+
+            <label>
+                📍 Location
+            </label>
+
+            <input
+                type="text"
+                id="location"
+                placeholder="City / College / Area"
+            >
+
+
+            <label>
+                📞 Contact Number *
+            </label>
+
+            <input
+                type="tel"
+                id="contact"
+                placeholder="Your mobile number"
+                required
+            >
+
+
+            <label>
+                Description
+            </label>
+
+            <textarea
+                id="description"
+                placeholder="Tell something about your book..."
+            ></textarea>
+
+
+            <button
+                type="submit"
+                class="submit-btn"
+            >
+                Submit Listing →
+            </button>
+
+        </form>
+
+
+        <div
+            class="success"
+            id="success"
+        >
+
+            <div>
+                ✅
+            </div>
+
+            <h2>
+                Listing Submitted!
+            </h2>
+
+            <p>
+                Your book details have been saved for this session.
+            </p>
+
+            <button onclick="closeForm()">
+                Done
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
