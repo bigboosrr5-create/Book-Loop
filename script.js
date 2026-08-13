@@ -255,34 +255,27 @@ async function saveBookForm(form) {
 // FORM SUBMIT
 // ======================================================
 
-document.addEventListener(
-    "submit",
-    function (event) {
+document.addEventListener("submit", function (event) {
 
-        const form =
-            event.target;
+    const form = event.target;
 
+    // सिर्फ popup forms को handle करें
+    if (!form.classList.contains("popup-form")) {
+        return;
+    }
 
-        if (!form.matches(".popup-form")) {
-            return;
-        }
+    // Browser का normal form submit रोकें
+    event.preventDefault();
+    event.stopPropagation();
 
+    // action और method हटाएँ
+    form.removeAttribute("action");
+    form.removeAttribute("method");
 
-        // IMPORTANT
-        // Browser को /sell-book या /exchange-book
-        // पर जाने से रोकता है
+    // Supabase में data save करें
+    saveBookForm(form);
 
-        event.preventDefault();
-
-        event.stopPropagation();
-
-
-        saveBookForm(form);
-
-    },
-    true
-);
-
+}, true);
 
 // ======================================================
 // LOAD BOOKS
