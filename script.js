@@ -1,10 +1,16 @@
 // ======================================================
-// FORM OPEN / CLOSE
+// BOOK-LOOP FINAL SCRIPT
+// ======================================================
+
+
+// ======================================================
+// OPEN FORM
 // ======================================================
 
 function openForm(type) {
 
-    const forms = document.querySelectorAll(".popup-form");
+    const forms =
+        document.querySelectorAll(".popup-form");
 
     forms.forEach(function (form) {
         form.classList.remove("active");
@@ -35,7 +41,7 @@ function closeForm() {
 
 
 // ======================================================
-// SUPABASE DATABASE CONNECTION
+// SUPABASE
 // ======================================================
 
 const SUPABASE_URL =
@@ -44,20 +50,22 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_RybHu-aZHpHct_aJyXYNrA_gr1IFfbD";
 
+
 let supabaseClient = null;
 
 
 if (typeof supabase !== "undefined") {
 
-    supabaseClient = supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+    supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
 
 } else {
 
     console.error(
-        "Supabase library load नहीं हुई।"
+        "Supabase library नहीं मिली।"
     );
 }
 
@@ -68,10 +76,12 @@ if (typeof supabase !== "undefined") {
 
 function getBookData(form) {
 
-    const formData = new FormData(form);
+    const formData =
+        new FormData(form);
 
-    const priceValue =
+    const price =
         formData.get("price");
+
 
     return {
 
@@ -94,9 +104,9 @@ function getBookData(form) {
             formData.get("book_condition") || null,
 
         price:
-            priceValue !== null &&
-            priceValue !== ""
-                ? Number(priceValue)
+            price !== null &&
+            price !== ""
+                ? Number(price)
                 : null,
 
         location:
@@ -118,7 +128,7 @@ function getBookData(form) {
 
 
 // ======================================================
-// SAVE BOOK TO SUPABASE
+// SAVE DATA TO SUPABASE
 // ======================================================
 
 async function saveBookForm(form) {
@@ -133,93 +143,108 @@ async function saveBookForm(form) {
     }
 
 
-    const submitButton =
+    const button =
         form.querySelector(
             'button[type="submit"]'
         );
 
 
-    const oldButtonText =
-        submitButton
-            ? submitButton.textContent
-            : "Submit";
-
-
     try {
 
-        if (submitButton) {
+        if (button) {
 
-            submitButton.disabled = true;
+            button.disabled = true;
 
-            submitButton.textContent =
+            button.textContent =
                 "Saving...";
         }
 
+
+        // ----------------------------------------------
+        // GET DATA
+        // ----------------------------------------------
 
         const bookData =
             getBookData(form);
 
 
         console.log(
-            "Book Data:",
+            "Data भेजा जा रहा है:",
             bookData
         );
 
 
-        // Native form POST को रोकें
+        // ----------------------------------------------
+        // STOP NORMAL HTML SUBMIT
+        // ----------------------------------------------
+
         form.removeAttribute("action");
+
         form.removeAttribute("method");
 
 
-        // ==================================================
-        // INSERT DATA
-        // ==================================================
+        // ----------------------------------------------
+        // INSERT INTO SUPABASE
+        // ----------------------------------------------
 
-        const { data, error } =
+        const result =
             await supabaseClient
                 .from("books")
                 .insert([bookData])
                 .select();
 
 
-        // ==================================================
+        const data =
+            result.data;
+
+        const error =
+            result.error;
+        // ----------------------------------------------
         // ERROR
-        // ==================================================
+        // ----------------------------------------------
 
         if (error) {
 
             console.error(
-                "Supabase Insert Error:",
+                "Supabase Error:",
                 error
             );
+
+
             alert(
                 "❌ Data save नहीं हुआ!\n\n" +
                 error.message
             );
 
+
             return;
         }
 
 
-        // ==================================================
+        // ----------------------------------------------
         // SUCCESS
-        // ==================================================
+        // ----------------------------------------------
 
         console.log(
-            "Saved:",
+            "Data saved:",
             data
         );
 
 
         alert(
-            "✅ Book successfully saved!"
+            "✅ Data successfully saved!"
         );
 
 
+        // Form clear
         form.reset();
 
+
+        // Form close
         closeForm();
 
+
+        // Books refresh
         loadBooks();
 
     }
@@ -227,12 +252,13 @@ async function saveBookForm(form) {
     catch (error) {
 
         console.error(
-            "Unexpected Error:",
+            "Error:",
             error
         );
 
+
         alert(
-            "❌ कुछ समस्या आ गई!\n\n" +
+            "❌ Error:\n\n" +
             error.message
         );
 
@@ -240,12 +266,12 @@ async function saveBookForm(form) {
 
     finally {
 
-        if (submitButton) {
+        if (button) {
 
-            submitButton.disabled = false;
+            button.disabled = false;
 
-            submitButton.textContent =
-                oldButtonText;
+            button.textContent =
+                "Submit";
         }
     }
 }
@@ -255,27 +281,51 @@ async function saveBookForm(form) {
 // FORM SUBMIT
 // ======================================================
 
-document.addEventListener("submit", function (event) {
+document.addEventListener(
+    "submit",
+    function (event) {
 
-    const form = event.target;
+        const form =
+            event.target;
 
-    // सिर्फ popup forms को handle करें
-    if (!form.classList.contains("popup-form")) {
-        return;
-    }
 
-    // Browser का normal form submit रोकें
-    event.preventDefault();
-    event.stopPropagation();
+        // सिर्फ popup forms
+        if (
+            !form.classList.contains(
+                "popup-form"
+            )
+        ) {
 
-    // action और method हटाएँ
-    form.removeAttribute("action");
-    form.removeAttribute("method");
+            return;
+        }
 
-    // Supabase में data save करें
-    saveBookForm(form);
 
-}, true);
+        // बहुत जरूरी:
+        // Browser को /sell-book आदि पर
+        // POST करने से रोकता है।
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+
+        // Native action हटाएँ
+        form.removeAttribute(
+            "action"
+        );
+
+        form.removeAttribute(
+            "method"
+        );
+
+
+        // Supabase में save करें
+        saveBookForm(form);
+
+    },
+    true
+);
+
 
 // ======================================================
 // LOAD BOOKS
@@ -290,10 +340,6 @@ async function loadBooks() {
 
 
     if (!bookGrid) {
-
-        console.log(
-            "bookGrid नहीं मिला"
-        );
 
         return;
     }
@@ -314,28 +360,32 @@ async function loadBooks() {
 
     try {
 
-        const {
-            data: books,
-            error
-        } =
+        const result =
             await supabaseClient
                 .from("books")
                 .select("*")
-                .order("id", {
-                    ascending: false
-                });
+                .order(
+                    "id",
+                    {
+                        ascending: false
+                    }
+                );
 
 
-        // ==================================================
-        // ERROR
-        // ==================================================
+        const books =
+            result.data;
+
+        const error =
+            result.error;
+
 
         if (error) {
 
             console.error(
-                "Supabase Load Error:",
+                "Load Error:",
                 error
             );
+
 
             bookGrid.innerHTML =
                 "<p>Books load नहीं हो सकीं।</p>";
@@ -343,10 +393,6 @@ async function loadBooks() {
             return;
         }
 
-
-        // ==================================================
-        // NO BOOKS
-        // ==================================================
 
         if (
             !books ||
@@ -360,64 +406,73 @@ async function loadBooks() {
         }
 
 
-        bookGrid.innerHTML = "";
+        bookGrid.innerHTML =
+            "";
 
-
-        // ==================================================
-        // CREATE BOOK CARDS
-        // ==================================================
 
         books.forEach(
             function (book) {
 
+                let type =
+                    "BOOK";
 
-                let type = "BOOK";
+                let price =
+                    "";
 
-                let price = "";
 
+                // --------------------------------------
+                // TYPE
+                // --------------------------------------
 
-                // Listing type
                 if (
-                    book.listing_type === "sell"
+                    book.listing_type ===
+                    "sell"
                 ) {
 
-                    type = "FOR SALE";
+                    type =
+                        "FOR SALE";
 
                 }
 
                 else if (
-                    book.listing_type === "exchange"
+                    book.listing_type ===
+                    "exchange"
                 ) {
 
-                    type = "EXCHANGE";
+                    type =
+                        "EXCHANGE";
 
                 }
-
                 else if (
-                    book.listing_type === "donate"
+                    book.listing_type ===
+                    "donate"
                 ) {
 
-                    type = "DONATE";
-
+                    type =
+                        "DONATE";
                 }
 
 
-                // ==================================================
+                // --------------------------------------
                 // PRICE
-                // ==================================================
-            if (
-                    book.listing_type === "sell" &&
+                // --------------------------------------
+
+                if (
+                    book.listing_type ===
+                    "sell" &&
                     book.price !== null &&
                     book.price !== ""
                 ) {
 
                     price =
-                        "₹" + book.price;
+                        "₹" +
+                        book.price;
 
                 }
 
                 else if (
-                    book.listing_type === "exchange"
+                    book.listing_type ===
+                    "exchange"
                 ) {
 
                     price =
@@ -426,32 +481,18 @@ async function loadBooks() {
                 }
 
                 else if (
-                    book.listing_type === "donate"
+                    book.listing_type ===
+                    "donate"
                 ) {
 
                     price =
                         "Free";
-
                 }
 
 
-                // ==================================================
-                // BOOK CARD
-                // ==================================================
-
-                const card =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                card.className =
-                    "book-card";
-
-
-                // ==================================================
-                // OPTIONAL DATA
-                // ==================================================
+                // --------------------------------------
+                // OPTIONAL INFORMATION
+                // --------------------------------------
 
                 const authorHTML =
                     book.author
@@ -483,9 +524,19 @@ async function loadBooks() {
                         : "";
 
 
-                // ==================================================
-                // CARD HTML
-                // ==================================================
+                // --------------------------------------
+                // CARD
+                // --------------------------------------
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "book-card";
+
 
                 card.innerHTML = 
 
@@ -524,21 +575,19 @@ async function loadBooks() {
 
                             <button
                                 type="button"
-                                onclick="showBookDetails('${String(book.id).replace(/'/g, "\\'")}')">
+                                onclick="showBookDetails('${book.id}')">
                                 View
                             </button>
 
                         </div>
 
                     </div>
-
                 ;
 
 
                 bookGrid.appendChild(
                     card
                 );
-
             }
         );
 
@@ -547,9 +596,10 @@ async function loadBooks() {
     catch (error) {
 
         console.error(
-            "Books loading error:",
+            "Books Error:",
             error
         );
+
 
         bookGrid.innerHTML =
             "<p>Books load करते समय समस्या आई।</p>";
@@ -558,14 +608,13 @@ async function loadBooks() {
 
 
 // ======================================================
-// HTML ESCAPE
+// ESCAPE HTML
 // ======================================================
 
 function escapeHTML(value) {
 
     return String(value)
-
-        .replace(
+    .replace(
             /&/g,
             "&amp;"
         )
@@ -574,7 +623,8 @@ function escapeHTML(value) {
             /</g,
             "&lt;"
         )
-    .replace(
+
+        .replace(
             />/g,
             "&gt;"
         )
@@ -592,7 +642,7 @@ function escapeHTML(value) {
 
 
 // ======================================================
-// LOAD BOOKS WHEN WEBSITE OPENS
+// PAGE LOAD
 // ======================================================
 
 document.addEventListener(
