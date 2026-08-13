@@ -154,25 +154,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
         });
         // ======================================
-// SUPABASE SE BOOKS EXPLORE MEIN DIKHAYEN
+// EXPLORE BOOKS FROM SUPABASE
 // ======================================
 
 async function loadBooks() {
 
     const bookGrid = document.getElementById("bookGrid");
 
-    if (!bookGrid) return;
+    if (!bookGrid) {
+        console.log("bookGrid नहीं मिला");
+        return;
+    }
 
     bookGrid.innerHTML = "<p>Loading books...</p>";
 
     const { data: books, error } = await supabaseClient
         .from("books")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select("*");
 
     if (error) {
 
-        console.error(error);
+        console.error("Supabase Error:", error);
 
         bookGrid.innerHTML =
             "<p>Books load नहीं हो सकीं।</p>";
@@ -188,58 +190,107 @@ async function loadBooks() {
         return;
     }
 
+    // पुराने/demo books हटाएँ
     bookGrid.innerHTML = "";
 
     books.forEach(function(book) {
+
+        let type = "BOOK";
+
+        if (book.listing_type === "sell") {
+            type = "FOR SALE";
+        }
+
+        if (book.listing_type === "exchange") {
+            type = "EXCHANGE";
+        }
+
+        if (book.listing_type === "donate") {
+            type = "DONATE";
+        }
+
+
+        let price = "";
+
+        if (book.listing_type === "sell") {
+
+            if (book.price !== null && book.price !== "") {
+                price = "₹" + book.price;
+            }
+
+        }
+
+        if (book.listing_type === "exchange") {
+            price = "Exchange";
+        }
+
+        if (book.listing_type === "donate") {
+            price = "Free";
+        }
+
 
         const card = document.createElement("div");
 
         card.className = "book-card";
 
-        let type = "";
-
-        if (book.listing_type === "sell") {
-            type = "FOR SALE";
-        } else if (book.listing_type === "exchange") {
-            type = "EXCHANGE";
-        } else if (book.listing_type === "donate") {
-            type = "DONATE";
-        }
-
-        let price = "";
-
-        if (book.listing_type === "sell" && book.price != null) {
-            price = "₹" + book.price;
-        } else if (book.listing_type === "exchange") {
-            price = "Exchange";
-        } else if (book.listing_type === "donate") {
-            price = "Free";
-        }
 
         card.innerHTML = 
+
             <div class="book-image purple">
                 📚
             </div>
 
             <div class="book-info">
 
-                <span class="tag">${type}</span>
+                <span class="tag">
+                    ${book.listing_type === "exchange" ? "EXCHANGE" :
+                      book.listing_type === "donate" ? "DONATE" :
+                      "FOR SALE"}
+                </span>
 
-                <h3>${book.book_title || ""}</h3>
+                <h3>
+                    ${book.book_title || "Book"}
+                </h3>
 
-                <p>${book.author || ""}</p>
+                ${
+                    book.author
+                    ? <p>📖 ${book.author}</p>
+                    : ""
+                }
 
-                <p>${book.category || ""}</p>
+                ${
+                    book.category
+                    ? <p>${book.category}</p>
+                    : ""
+                }
 
-                <p>${book.course || ""}</p>
+                ${
+                    book.course
+                    ? <p>${book.course}</p>
+                    : ""
+                }
 
-                <p>📍 ${book.location || ""}</p>
+                ${
+                    book.semester
+                    ? <p>${book.semester}</p>
+                    : ""
+                }
+
+                ${
+                    book.location
+                    ? <p>📍 ${book.location}</p>
+                    : ""
+                }
 
                 <div class="book-bottom">
 
-                    <strong>${price}</strong>
+                    <strong>
+                        ${price}
+                    </strong>
 
-                    <button type="button">
+                    <button
+                        type="button"
+                        onclick="showBookDetails('${book.id}')">
                         View
                     </button>
 
@@ -248,15 +299,16 @@ async function loadBooks() {
             </div>
         ;
 
+
         bookGrid.appendChild(card);
 
     });
+
 }
-                          
+                          // ======================================
+// LOAD BOOKS WHEN WEBSITE OPENS
+// ======================================
 
-    });
-
-});
 document.addEventListener("DOMContentLoaded", function () {
     loadBooks();
 });
