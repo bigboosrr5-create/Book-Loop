@@ -1,18 +1,14 @@
-// ================================
+// ======================================
 // FORM OPEN / CLOSE
-// ================================
+// ======================================
 
 function openForm(type) {
 
-    // सभी forms बंद करें
-    var forms = document.querySelectorAll(".popup-form");
-
-    forms.forEach(function(form) {
+    document.querySelectorAll(".popup-form").forEach(function(form) {
         form.classList.remove("active");
     });
 
-    // चुना हुआ form खोलें
-    var selectedForm = document.getElementById(type + "-form");
+    const selectedForm = document.getElementById(type + "-form");
 
     if (selectedForm) {
         selectedForm.classList.add("active");
@@ -20,25 +16,27 @@ function openForm(type) {
 }
 
 
-// ================================
+// ======================================
 // BACK BUTTON
-// ================================
+// ======================================
 
 function closeForm() {
 
-    var forms = document.querySelectorAll(".popup-form");
-
-    forms.forEach(function(form) {
+    document.querySelectorAll(".popup-form").forEach(function(form) {
         form.classList.remove("active");
     });
 
 }
+
+
 // ======================================
-// SUPABASE DATABASE CONNECTION
+// SUPABASE CONNECTION
 // ======================================
 
 const SUPABASE_URL = "https://ewammndvxdenjrhaazsh.supabase.co";
-const SUPABASE_KEY = "sb_publishable_RybHu-aZHpHct_aJyXYNrA_gr1IFfbD";
+
+const SUPABASE_KEY =
+    "sb_publishable_RybHu-aZHpHct_aJyXYNrA_gr1IFfbD";
 
 const supabaseClient = supabase.createClient(
     SUPABASE_URL,
@@ -47,45 +45,67 @@ const supabaseClient = supabase.createClient(
 
 
 // ======================================
-// SAVE FORM DATA
+// SAVE FORM DATA + LOAD EXPLORE
 // ======================================
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
 
     const forms = document.querySelectorAll(".popup-form");
 
-    forms.forEach(function (form) {
+    forms.forEach(function(form) {
 
-        form.addEventListener("submit", async function (event) {
+        form.addEventListener("submit", async function(event) {
 
+            // 405 Not Allowed रोकना
             event.preventDefault();
 
             const formData = new FormData(form);
 
             const bookData = {
+
                 book_title: formData.get("book_title") || null,
+
                 author: formData.get("author") || null,
+
                 category: formData.get("category") || null,
+
                 course: formData.get("course") || null,
+
                 semester: formData.get("semester") || null,
-                book_condition: formData.get("book_condition") || null,
-                price: formData.get("price")
-                    ? Number(formData.get("price"))
-                    : null,
-                location: formData.get("location") || null,
-                contact_number: formData.get("contact_number") || null,
-                description: formData.get("description") || null,
-                listing_type: formData.get("listing_type") || null,
-                wanted_book: formData.get("wanted_book") || null
+
+                book_condition:
+                    formData.get("book_condition") || null,
+
+                price:
+                    formData.get("price")
+                        ? Number(formData.get("price"))
+                        : null,
+
+                location:
+                    formData.get("location") || null,
+
+                contact_number:
+                    formData.get("contact_number") || null,
+
+                description:
+                    formData.get("description") || null,
+
+                listing_type:
+                    formData.get("listing_type") || null,
+
+                wanted_book:
+                    formData.get("wanted_book") || null
             };
+
 
             const { error } = await supabaseClient
                 .from("books")
                 .insert([bookData]);
 
+
             if (error) {
 
-                console.error(error);
+                console.error("Save Error:", error);
 
                 alert(
                     "Data save नहीं हुआ:\n" +
@@ -95,92 +115,70 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+
             alert("Book successfully saved!");
+
 
             form.reset();
 
             closeForm();
+
+
+            // नई book Explore में तुरंत दिखाएँ
+            loadBooks();
 
         });
 
     });
 
+
+    // Website खुलते ही saved books दिखाएँ
+    loadBooks();
+
 });
-document.addEventListener("DOMContentLoaded", function () {
 
-    document.querySelectorAll(".popup-form").forEach(function (form) {
 
-        form.addEventListener("submit", async function (event) {
-
-            event.preventDefault();
-
-            const formData = new FormData(form);
-
-            const bookData = {
-                book_title: formData.get("book_title") || null,
-                author: formData.get("author") || null,
-                category: formData.get("category") || null,
-                course: formData.get("course") || null,
-                semester: formData.get("semester") || null,
-                book_condition: formData.get("book_condition") || null,
-                price: formData.get("price")
-                    ? Number(formData.get("price"))
-                    : null,
-                location: formData.get("location") || null,
-                contact_number: formData.get("contact_number") || null,
-                description: formData.get("description") || null,
-                listing_type: formData.get("listing_type") || null,
-                wanted_book: formData.get("wanted_book") || null
-            };
-
-            const { error } = await supabaseClient
-                .from("books")
-                .insert([bookData]);
-
-            if (error) {
-                alert("Data save नहीं हुआ:\n" + error.message);
-                console.error(error);
-                return;
-            }
-
-            alert("Data successfully saved!");
-
-            form.reset();
-            closeForm();
-
-            if (typeof loadBooks === "function") {
-                loadBooks();
-            }
-
-        });
-        // ======================================
-// EXPLORE BOOKS FROM SUPABASE
+// ======================================
+// LOAD BOOKS FROM SUPABASE
 // ======================================
 
 async function loadBooks() {
 
-    const bookGrid = document.getElementById("bookGrid");
+    const bookGrid =
+        document.getElementById("bookGrid");
+
 
     if (!bookGrid) {
+
         console.log("bookGrid नहीं मिला");
+
         return;
     }
 
-    bookGrid.innerHTML = "<p>Loading books...</p>";
 
-    const { data: books, error } = await supabaseClient
-        .from("books")
-        .select("*");
+    bookGrid.innerHTML =
+        "<p>Loading books...</p>";
+
+
+    const { data: books, error } =
+        await supabaseClient
+            .from("books")
+            .select("*");
+
 
     if (error) {
 
-        console.error("Supabase Error:", error);
+        console.error(
+            "Explore Books Error:",
+            error
+        );
 
         bookGrid.innerHTML =
             "<p>Books load नहीं हो सकीं।</p>";
 
         return;
     }
+
 
     if (!books || books.length === 0) {
 
@@ -190,46 +188,63 @@ async function loadBooks() {
         return;
     }
 
-    // पुराने/demo books हटाएँ
+
+    // पुराने demo books हटाएँ
     bookGrid.innerHTML = "";
+
 
     books.forEach(function(book) {
 
-        let type = "BOOK";
 
-        if (book.listing_type === "sell") {
-            type = "FOR SALE";
-        }
-
+        let type = "FOR SALE";
         if (book.listing_type === "exchange") {
+
             type = "EXCHANGE";
+
         }
+
 
         if (book.listing_type === "donate") {
+
             type = "DONATE";
+
         }
 
 
         let price = "";
 
+
         if (book.listing_type === "sell") {
 
-            if (book.price !== null && book.price !== "") {
+            if (
+                book.price !== null &&
+                book.price !== ""
+            ) {
+
                 price = "₹" + book.price;
+
             }
 
         }
 
+
         if (book.listing_type === "exchange") {
+
             price = "Exchange";
+
         }
+
 
         if (book.listing_type === "donate") {
+
             price = "Free";
+
         }
 
 
-        const card = document.createElement("div");
+        const card =
+            document.createElement("div");
+
 
         card.className = "book-card";
 
@@ -243,9 +258,7 @@ async function loadBooks() {
             <div class="book-info">
 
                 <span class="tag">
-                    ${book.listing_type === "exchange" ? "EXCHANGE" :
-                      book.listing_type === "donate" ? "DONATE" :
-                      "FOR SALE"}
+                    ${type}
                 </span>
 
                 <h3>
@@ -254,32 +267,32 @@ async function loadBooks() {
 
                 ${
                     book.author
-                    ? <p>📖 ${book.author}</p>
-                    : ""
+                        ? <p>📖 ${book.author}</p>
+                        : ""
                 }
 
                 ${
                     book.category
-                    ? <p>${book.category}</p>
-                    : ""
+                        ? <p>${book.category}</p>
+                        : ""
                 }
 
                 ${
                     book.course
-                    ? <p>${book.course}</p>
-                    : ""
+                        ? <p>${book.course}</p>
+                        : ""
                 }
 
                 ${
                     book.semester
-                    ? <p>${book.semester}</p>
-                    : ""
+                        ? <p>${book.semester}</p>
+                        : ""
                 }
 
                 ${
                     book.location
-                    ? <p>📍 ${book.location}</p>
-                    : ""
+                        ? <p>📍 ${book.location}</p>
+                        : ""
                 }
 
                 <div class="book-bottom">
@@ -297,6 +310,7 @@ async function loadBooks() {
                 </div>
 
             </div>
+
         ;
 
 
@@ -305,10 +319,4 @@ async function loadBooks() {
     });
 
 }
-                          // ======================================
-// LOAD BOOKS WHEN WEBSITE OPENS
-// ======================================
-
-document.addEventListener("DOMContentLoaded", function () {
-    loadBooks();
-});
+        
