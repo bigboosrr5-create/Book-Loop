@@ -27,6 +27,57 @@ function closeForm() {
     });
 
 }
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll(".popup-form").forEach(function (form) {
+
+        form.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+            const formData = new FormData(form);
+
+            const bookData = {
+                book_title: formData.get("book_title") || null,
+                author: formData.get("author") || null,
+                category: formData.get("category") || null,
+                course: formData.get("course") || null,
+                semester: formData.get("semester") || null,
+                book_condition: formData.get("book_condition") || null,
+                price: formData.get("price")
+                    ? Number(formData.get("price"))
+                    : null,
+                location: formData.get("location") || null,
+                contact_number: formData.get("contact_number") || null,
+                description: formData.get("description") || null,
+                listing_type: formData.get("listing_type") || null,
+                wanted_book: formData.get("wanted_book") || null
+            };
+
+            const { error } = await supabaseClient
+                .from("books")
+                .insert([bookData]);
+
+            if (error) {
+                alert("Data save नहीं हुआ:\n" + error.message);
+                console.error(error);
+                return;
+            }
+
+            alert("Data successfully saved!");
+
+            form.reset();
+            closeForm();
+
+            if (typeof loadBooks === "function") {
+                loadBooks();
+            }
+
+        });
+
+    });
+
+});
 
 
 // ======================================
