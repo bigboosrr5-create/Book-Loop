@@ -719,3 +719,18 @@ textarea{
 .popup-form.active {
     display: block;
 }
+.back-button {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 9px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #eeeeee;
+    color: #333333;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    background: #dddddd;
+}
