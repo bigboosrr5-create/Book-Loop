@@ -1,40 +1,35 @@
 // ======================================================
-// BOOK-LOOP - COMPLETE FIXED JAVASCRIPT
-// ======================================================
-
-// ======================================================
 // FORM OPEN / CLOSE
 // ======================================================
 
 function openForm(type) {
+
     const forms = document.querySelectorAll(".popup-form");
 
     forms.forEach(function (form) {
         form.classList.remove("active");
-        form.style.display = "";
     });
 
-    const selectedForm = document.getElementById(type + "-form");
+    const selectedForm =
+        document.getElementById(type + "-form");
 
     if (selectedForm) {
         selectedForm.classList.add("active");
-        selectedForm.style.display = "block";
-        document.body.style.overflow = "hidden";
     }
 }
+// ======================================================
+// CLOSE FORM
+// ======================================================
 
 function closeForm() {
-    const forms = document.querySelectorAll(".popup-form");
+
+    const forms =
+        document.querySelectorAll(".popup-form");
 
     forms.forEach(function (form) {
         form.classList.remove("active");
-        form.style.display = "";
     });
-
-    document.body.style.overflow = "";
 }
-
-
 // ======================================================
 // SUPABASE DATABASE CONNECTION
 // ======================================================
