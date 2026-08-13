@@ -588,7 +588,38 @@
 
 </form>
 </div>
+  <script>
+function openForm(type) {
+
+    document.querySelectorAll(".popup-form").forEach(function(form) {
+        form.style.display = "none";
+        form.classList.remove("active");
+    });
+
+    var form = document.getElementById(type + "-form");
+
+    if (form) {
+        form.style.display = "block";
+        form.classList.add("active");
+        document.body.style.overflow = "hidden";
+    }
+}
+
+function closeForm() {
+
+    document.querySelectorAll(".popup-form").forEach(function(form) {
+        form.style.display = "none";
+        form.classList.remove("active");
+    });
+
+    document.body.style.overflow = "";
+}
+</script>
+
 <script src="script.js"></script>
+</body>
+</html>  
+    <script src="script.js"></script>
 
 </body>
 </html>
