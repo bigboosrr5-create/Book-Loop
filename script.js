@@ -329,53 +329,22 @@ async function saveBookForm(form) {
 // ======================================================
 // FORM SUBMIT
 // ======================================================
+document.addEventListener("DOMContentLoaded", function () {
 
-document.addEventListener(
-    "submit",
-    function (event) {
+    document.querySelectorAll(".popup-form").forEach(function (form) {
 
-        const form =
-            event.target;
+        form.addEventListener("submit", function (event) {
 
+            // पुराने /sell-book, /exchange-book, /donate-book URL पर जाने से रोकें
+            event.preventDefault();
 
-        // सिर्फ popup forms
-        if (
-            !form.classList.contains(
-                "popup-form"
-            )
-        ) {
+            alert("Form submit हो गया।");
 
-            return;
-        }
+        });
 
+    });
 
-        // बहुत जरूरी:
-        // Browser को /sell-book आदि पर
-        // POST करने से रोकता है।
-
-        event.preventDefault();
-
-        event.stopPropagation();
-
-
-        // Native action हटाएँ
-        form.removeAttribute(
-            "action"
-        );
-
-        form.removeAttribute(
-            "method"
-        );
-
-
-        // Supabase में save करें
-        saveBookForm(form);
-
-    },
-    true
-);
-
-
+});
 // ======================================================
 // LOAD BOOKS
 // ======================================================
