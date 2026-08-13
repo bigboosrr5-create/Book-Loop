@@ -45,18 +45,16 @@ const supabaseClient = supabase.createClient(
 
 
 // ======================================
-// SAVE FORM DATA + LOAD EXPLORE
+// FORM SUBMIT + SAVE DATA
 // ======================================
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    const forms = document.querySelectorAll(".popup-form");
-
-    forms.forEach(function(form) {
+    document.querySelectorAll(".popup-form").forEach(function(form) {
 
         form.addEventListener("submit", async function(event) {
 
-            // 405 Not Allowed रोकना
+            // 405 Not Allowed रोकें
             event.preventDefault();
 
             const formData = new FormData(form);
@@ -123,8 +121,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             closeForm();
 
-
-            // नई book Explore में तुरंत दिखाएँ
+            // Save के बाद Explore को तुरंत refresh करें
             loadBooks();
 
         });
@@ -132,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 
-    // Website खुलते ही saved books दिखाएँ
+    // Website खुलते ही books load करें
     loadBooks();
 
 });
@@ -189,56 +186,44 @@ async function loadBooks() {
     }
 
 
-    // पुराने demo books हटाएँ
+    // पुराने/demo books हटाएँ
     bookGrid.innerHTML = "";
 
 
     books.forEach(function(book) {
 
-
         let type = "FOR SALE";
         if (book.listing_type === "exchange") {
-
             type = "EXCHANGE";
-
         }
 
 
         if (book.listing_type === "donate") {
-
             type = "DONATE";
-
         }
 
 
         let price = "";
 
 
-        if (book.listing_type === "sell") {
+        if (
+            book.listing_type === "sell" &&
+            book.price !== null &&
+            book.price !== ""
+        ) {
 
-            if (
-                book.price !== null &&
-                book.price !== ""
-            ) {
-
-                price = "₹" + book.price;
-
-            }
+            price = "₹" + book.price;
 
         }
 
 
         if (book.listing_type === "exchange") {
-
             price = "Exchange";
-
         }
 
 
         if (book.listing_type === "donate") {
-
             price = "Free";
-
         }
 
 
@@ -249,6 +234,7 @@ async function loadBooks() {
         card.className = "book-card";
 
 
+        // IMPORTANT: HTML को backticks के अंदर रखा गया है
         card.innerHTML = 
 
             <div class="book-image purple">
@@ -267,32 +253,32 @@ async function loadBooks() {
 
                 ${
                     book.author
-                        ? <p>📖 ${book.author}</p>
-                        : ""
+                    ? <p>📖 ${book.author}</p>
+                    : ""
                 }
 
                 ${
                     book.category
-                        ? <p>${book.category}</p>
-                        : ""
+                    ? <p>${book.category}</p>
+                    : ""
                 }
 
                 ${
                     book.course
-                        ? <p>${book.course}</p>
-                        : ""
+                    ? <p>${book.course}</p>
+                    : ""
                 }
 
                 ${
                     book.semester
-                        ? <p>${book.semester}</p>
-                        : ""
+                    ? <p>${book.semester}</p>
+                    : ""
                 }
 
                 ${
                     book.location
-                        ? <p>📍 ${book.location}</p>
-                        : ""
+                    ? <p>📍 ${book.location}</p>
+                    : ""
                 }
 
                 <div class="book-bottom">
@@ -300,12 +286,6 @@ async function loadBooks() {
                     <strong>
                         ${price}
                     </strong>
-
-                    <button
-                        type="button"
-                        onclick="showBookDetails('${book.id}')">
-                        View
-                    </button>
 
                 </div>
 
