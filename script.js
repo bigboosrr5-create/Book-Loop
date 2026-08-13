@@ -1,14 +1,22 @@
 function openForm(type) {
 
+    // सभी forms बंद करें
     document.querySelectorAll(".popup-form").forEach(function(form) {
         form.classList.remove("active");
     });
 
+    // चुना हुआ form खोजें
     const form = document.getElementById(type + "-form");
 
     if (form) {
+        // form को page के ऊपर ले जाएँ
+        document.body.appendChild(form);
+
+        // popup खोलें
         form.classList.add("active");
-        document.body.classList.add("form-open");
+
+        // page को पीछे से scroll होने से रोकें
+        document.body.style.overflow = "hidden";
     }
 }
 
@@ -18,15 +26,5 @@ function closeForm() {
         form.classList.remove("active");
     });
 
-    document.body.classList.remove("form-open");
+    document.body.style.overflow = "";
 }
-
-function showMessage() {
-    alert("Book details will be available here.");
-}
-
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape") {
-        closeForm();
-    }
-});
