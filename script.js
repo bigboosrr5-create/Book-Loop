@@ -252,7 +252,11 @@ async function loadBooks() {
 
     });
 }
+                          
 
     });
 
+});
+document.addEventListener("DOMContentLoaded", function () {
+    loadBooks();
 });
