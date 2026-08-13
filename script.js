@@ -17,12 +17,6 @@ const supabaseClient = supabase.createClient(
 // ======================================================
 
 function openForm(type) {
-
-    // सभी forms बंद करें
-    document.querySelectorAll(".popup-form").forEach(function(form) {
-        form.classList.remove("active");
-    });
-
     // जिस form पर click हुआ उसे खोलें
     const form = document.getElementById(type + "-form");
 
