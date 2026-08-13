@@ -1,3 +1,10 @@
+const SUPABASE_URL = "https://ewammndvxdenjrhaazsh.supabase.co";
+const SUPABASE_KEY = "sb_publishable_RybHu-aZHpHct_aJyXYNrA_gr1IFfbD";
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 function openForm(type) {
 
     // सभी forms बंद करें
