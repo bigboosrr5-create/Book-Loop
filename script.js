@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // ======================================================
 
 const SUPABASE_URL =
-    "https://ewammndvxdenjrhaazsh.supabase.co";
+    "https://ewammndvxdenjrhaazsh.supabase.co/rest/v1/";
 
 const SUPABASE_KEY =
     "sb_publishable_RybHu-aZHpHct_aJyXYNrA_gr1IFfbD";
