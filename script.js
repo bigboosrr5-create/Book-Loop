@@ -1,42 +1,42 @@
 // ======================================================
+// BOOK-LOOP - COMPLETE FIXED JAVASCRIPT
+// ======================================================
+
+// ======================================================
 // FORM OPEN / CLOSE
 // ======================================================
 
 function openForm(type) {
-
-    // सभी popup forms बंद करें
     const forms = document.querySelectorAll(".popup-form");
 
     forms.forEach(function (form) {
         form.classList.remove("active");
+        form.style.display = "";
     });
 
-    // चुना हुआ form खोलें
     const selectedForm = document.getElementById(type + "-form");
 
     if (selectedForm) {
         selectedForm.classList.add("active");
+        selectedForm.style.display = "block";
+        document.body.style.overflow = "hidden";
     }
 }
 
-
-// ======================================================
-// CLOSE FORM
-// ======================================================
-
 function closeForm() {
-
     const forms = document.querySelectorAll(".popup-form");
 
     forms.forEach(function (form) {
         form.classList.remove("active");
+        form.style.display = "";
     });
 
+    document.body.style.overflow = "";
 }
 
 
 // ======================================================
-// SUPABASE CONNECTION
+// SUPABASE DATABASE CONNECTION
 // ======================================================
 
 const SUPABASE_URL =
@@ -45,437 +45,492 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_RybHu-aZHpHct_aJyXYNrA_gr1IFfbD";
 
+let supabaseClient = null;
 
-// Check Supabase library
-if (typeof supabase === "undefined") {
-
-    console.error("Supabase library load नहीं हुई।");
-
-} else {
-
-    const supabaseClient = supabase.createClient(
+if (typeof supabase !== "undefined") {
+    supabaseClient = supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
+} else {
+    console.error(
+        "Supabase library load नहीं हुई। index.html में Supabase CDN script check करें।"
+    );
+}
 
 
-    // ==================================================
-    // SAVE FORM DATA
-    // ==================================================
+// ======================================================
+// GET FORM DATA
+// ======================================================
 
-    document.addEventListener("DOMContentLoaded", function () {
+function getBookData(form) {
+    const formData = new FormData(form);
 
-        const forms = document.querySelectorAll(".popup-form");
+    const priceValue = formData.get("price");
 
-        forms.forEach(function (form) {
+    return {
+        book_title: formData.get("book_title") || null,
+        author: formData.get("author") || null,
+        category: formData.get("category") || null,
+        course: formData.get("course") || null,
+        semester: formData.get("semester") || null,
+        book_condition: formData.get("book_condition") || null,
 
-            form.addEventListener("submit", async function (event) {
+        price:
+            priceValue !== null && priceValue !== ""
+                ? Number(priceValue)
+                : null,
 
-                event.preventDefault();
+        location: formData.get("location") || null,
+        contact_number: formData.get("contact_number") || null,
+        description: formData.get("description") || null,
+        listing_type: formData.get("listing_type") || null,
+        wanted_book: formData.get("wanted_book") || null
+    };
+}
 
-                // Button को दोबारा click होने से रोकें
-                const submitButton =
-                    form.querySelector('button[type="submit"]');
 
-                if (submitButton) {
-                    submitButton.disabled = true;
-                    submitButton.textContent = "Saving...";
-                }
+// ======================================================
+// SAVE FORM DATA TO SUPABASE
+// ======================================================
 
+async function saveBookForm(form) {
 
-                try {
+    if (!supabaseClient) {
 
-                    const formData = new FormData(form);
+        alert(
+            "❌ Supabase connection नहीं मिली।\n\n" +
+            "Supabase script को index.html में check करें।"
+        );
 
+        return;
+    }
 
-                    // ======================================
-                    // FORM DATA
-                    // ======================================
+    const submitButton =
+        form.querySelector('button[type="submit"]');
 
-                    const priceValue = formData.get("price");
+    const oldButtonText =
+        submitButton ? submitButton.textContent : "";
 
-                    const bookData = {
+    try {
 
-                        book_title:
-                            formData.get("book_title") || null,
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = "Saving...";
+        }
 
-                        author:
-                            formData.get("author") || null,
+        const bookData = getBookData(form);
 
-                        category:
-                            formData.get("category") || null,
+        console.log(
+            "Book data:",
+            bookData
+        );
 
-                        course:
-                            formData.get("course") || null,
 
-                        semester:
-                            formData.get("semester") || null,
+        // IMPORTANT:
+        // Native GitHub Pages POST को रोकना
+        form.removeAttribute("action");
+        form.removeAttribute("method");
 
-                        book_condition:
-                            formData.get("book_condition") || null,
 
-                        price:
-                            priceValue !== null &&
-                            priceValue !== ""
-                                ? Number(priceValue)
-                                : null,
+        // ==============================================
+        // SAVE TO SUPABASE
+        // ==============================================
 
-                        location:
-                            formData.get("location") || null,
+        const { data, error } =
+            await supabaseClient
+                .from("books")
+                .insert(bookData)
+                .select();
 
-                        contact_number:
-                            formData.get("contact_number") || null,
 
-                        description:
-                            formData.get("description") || null,
+        // ==============================================
+        // ERROR
+        // ==============================================
 
-                        listing_type:
-                            formData.get("listing_type") || null,
-
-                        wanted_book:
-                            formData.get("wanted_book") || null
-                    };
-
-
-                    console.log(
-                        "Database में भेजा जा रहा data:",
-                        bookData
-                    );
-                    // ======================================
-                    // INSERT INTO SUPABASE
-                    // ======================================
-
-                    const { data, error } =
-                        await supabaseClient
-                            .from("books")
-                            .insert(bookData)
-                            .select();
-
-
-                    // ======================================
-                    // ERROR
-                    // ======================================
-
-                    if (error) {
-
-                        console.error(
-                            "Supabase Insert Error:",
-                            error
-                        );
-
-                        alert(
-                            "❌ Data save नहीं हुआ!\n\n" +
-                            error.message
-                        );
-
-                        return;
-                    }
-
-
-                    // ======================================
-                    // SUCCESS
-                    // ======================================
-
-                    console.log(
-                        "Data successfully saved:",
-                        data
-                    );
-
-                    alert(
-                        "✅ Book successfully listed!"
-                    );
-
-
-                    // Form खाली करें
-                    form.reset();
-
-
-                    // Form बंद करें
-                    closeForm();
-
-
-                    // Books दोबारा load करें
-                    loadBooks();
-
-                }
-
-                catch (error) {
-
-                    console.error(
-                        "Unexpected Error:",
-                        error
-                    );
-
-                    alert(
-                        "❌ कुछ समस्या आ गई!\n\n" +
-                        error.message
-                    );
-
-                }
-
-                finally {
-
-                    // Button वापस enable करें
-                    if (submitButton) {
-
-                        submitButton.disabled = false;
-
-                        submitButton.textContent =
-                            "Submit";
-                    }
-                }
-
-            });
-
-        });
-
-    });
-
-
-    // ==================================================
-    // LOAD BOOKS
-    // ==================================================
-
-    async function loadBooks() {
-
-        const bookGrid =
-            document.getElementById("bookGrid");
-
-
-        if (!bookGrid) {
-
-            console.log(
-                "bookGrid नहीं मिला।"
+        if (error) {
+            console.error(
+                "Supabase Insert Error:",
+                error
+            );
+
+            alert(
+                "❌ Data save नहीं हुआ!\n\n" +
+                error.message
             );
 
             return;
         }
 
 
-        bookGrid.innerHTML =
-            "<p>Loading books...</p>";
+        // ==============================================
+        // SUCCESS
+        // ==============================================
 
+        console.log(
+            "Book saved successfully:",
+            data
+        );
 
-        try {
+        alert(
+            "✅ Book successfully saved!"
+        );
 
-            const { data: books, error } =
-                await supabaseClient
-                    .from("books")
-                    .select("*")
-                    .order("id", {
-                        ascending: false
-                    });
+        form.reset();
 
+        closeForm();
 
-            // ==========================================
-            // LOAD ERROR
-            // ==========================================
+        await loadBooks();
 
-            if (error) {
+    }
 
-                console.error(
-                    "Supabase Load Error:",
-                    error
-                );
+    catch (error) {
 
-                bookGrid.innerHTML =
-                    "<p>Books load नहीं हो सकीं।</p>";
+        console.error(
+            "Unexpected Error:",
+            error
+        );
 
-                return;
-            }
+        alert(
+            "❌ कुछ समस्या आ गई!\n\n" +
+            error.message
+        );
 
+    }
 
-            // ==========================================
-            // NO BOOKS
-            // ==========================================
+    finally {
 
-            if (!books || books.length === 0) {
+        if (submitButton) {
 
-                bookGrid.innerHTML =
-                    "<p>अभी कोई book listed नहीं है।</p>";
+            submitButton.disabled = false;
 
-                return;
-            }
+            submitButton.textContent =
+                oldButtonText || "Submit";
+        }
+    }
+}
 
 
-            // पुराने cards हटाएँ
-            bookGrid.innerHTML = "";
+// ======================================================
+// HANDLE ALL POPUP FORM SUBMITS
+// ======================================================
 
+document.addEventListener(
+    "submit",
+    function (event) {
 
-            // ==========================================
-            // CREATE BOOK CARDS
-            // ==========================================
+        const form = event.target;
 
-            books.forEach(function (book) {
-
-                let type = "BOOK";
-                let price = "";
-                // Listing type
-                if (book.listing_type === "sell") {
-
-                    type = "FOR SALE";
-
-                }
-
-                else if (
-                    book.listing_type === "exchange"
-                ) {
-
-                    type = "EXCHANGE";
-
-                }
-
-                else if (
-                    book.listing_type === "donate"
-                ) {
-
-                    type = "DONATE";
-
-                }
-
-
-                // Price
-                if (
-                    book.listing_type === "sell" &&
-                    book.price !== null &&
-                    book.price !== ""
-                ) {
-
-                    price =
-                        "₹" + book.price;
-
-                }
-
-                else if (
-                    book.listing_type === "exchange"
-                ) {
-
-                    price = "Exchange";
-
-                }
-
-                else if (
-                    book.listing_type === "donate"
-                ) {
-
-                    price = "Free";
-
-                }
-
-
-                // ======================================
-                // CARD
-                // ======================================
-
-                const card =
-                    document.createElement("div");
-
-                card.className =
-                    "book-card";
-
-
-                // ======================================
-                // CARD HTML
-                // ======================================
-
-                card.innerHTML = 
-
-                    <div class="book-image purple">
-                        📚
-                    </div>
-
-                    <div class="book-info">
-
-                        <span class="tag">
-                            ${type}
-                        </span>
-
-                        <h3>
-                            ${book.book_title || "Book"}
-                        </h3>
-
-                        ${
-                            book.author
-                                ? <p>📖 ${book.author}</p>
-                                : ""
-                        }
-
-                        ${
-                            book.category
-                                ? <p>${book.category}</p>
-                                : ""
-                        }
-
-                        ${
-                            book.course
-                                ? <p>${book.course}</p>
-                                : ""
-                        }
-
-                        ${
-                            book.semester
-                                ? <p>${book.semester}</p>
-                                : ""
-                        }
-
-                        ${
-                            book.location
-                                ? <p>📍 ${book.location}</p>
-                                : ""
-                        }
-
-                        <div class="book-bottom">
-
-                            <strong>
-                                ${price}
-                            </strong>
-
-                            <button
-                                type="button"
-                                onclick="showBookDetails('${book.id}')">
-                                View
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                ;
-
-
-                bookGrid.appendChild(card);
-
-            });
-
+        if (!form.matches(".popup-form")) {
+            return;
         }
 
-        catch (error) {
+
+        // ==============================================
+        // IMPORTANT 405 FIX
+        // ==============================================
+
+        event.preventDefault();
+
+        event.stopPropagation();
+
+
+        // Save through Supabase
+        saveBookForm(form);
+
+    },
+    true
+);
+
+
+// ======================================================
+// LOAD BOOKS FROM SUPABASE
+// ======================================================
+
+async function loadBooks() {
+
+    const bookGrid =
+        document.getElementById("bookGrid");
+
+
+    if (!bookGrid) {
+
+        console.log(
+            "bookGrid नहीं मिला।"
+        );
+
+        return;
+    }
+
+
+    if (!supabaseClient) {
+
+        bookGrid.innerHTML =
+            "<p>Supabase connection नहीं मिली।</p>";
+
+        return;
+    }
+
+
+    bookGrid.innerHTML =
+        "<p>Loading books...</p>";
+
+
+    try {
+
+        const { data: books, error } =
+            await supabaseClient
+                .from("books")
+                .select("*")
+                .order("id", {
+                    ascending: false
+                });
+
+
+        // ==============================================
+        // ERROR
+        // ==============================================
+
+        if (error) {
 
             console.error(
-                "Books loading error:",
+                "Supabase Load Error:",
                 error
             );
 
             bookGrid.innerHTML =
-                "<p>Books load करते समय समस्या आई।</p>";
+                "<p>Books load नहीं हो सकीं।</p>";
+
+            return;
         }
+
+
+        // ==============================================
+        // NO BOOKS
+        // ==============================================
+
+        if (!books || books.length === 0) {
+
+            bookGrid.innerHTML =
+                "<p>अभी कोई book listed नहीं है।</p>";
+
+            return;
+        }
+
+
+        bookGrid.innerHTML = "";
+
+
+        // ==============================================
+        // CREATE BOOK CARDS
+        // ==============================================
+
+        books.forEach(function (book) {
+
+            let type = "BOOK";
+
+            let price = "";
+
+
+            if (book.listing_type === "sell") {
+
+                type = "FOR SALE";
+
+            }
+
+            else if (
+                book.listing_type === "exchange"
+            ) {
+
+                type = "EXCHANGE";
+
+            }
+
+            else if (
+                book.listing_type === "donate"
+            ) {
+
+                type = "DONATE";
+
+            }
+
+
+            // ==========================================
+            // PRICE
+            // ==========================================
+
+            if (
+                book.listing_type === "sell" &&
+                book.price !== null &&
+                book.price !== ""
+            ) {
+                price =
+                    "₹" + book.price;
+
+            }
+
+            else if (
+                book.listing_type === "exchange"
+            ) {
+
+                price = "Exchange";
+
+            }
+
+            else if (
+                book.listing_type === "donate"
+            ) {
+
+                price = "Free";
+
+            }
+
+
+            // ==========================================
+            // CARD
+            // ==========================================
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "book-card";
+
+
+            // ==========================================
+            // OPTIONAL DATA
+            // ==========================================
+
+            const authorHTML =
+                book.author
+                    ? <p>📖 ${escapeHTML(book.author)}</p>
+                    : "";
+
+
+            const categoryHTML =
+                book.category
+                    ? <p>${escapeHTML(book.category)}</p>
+                    : "";
+
+
+            const courseHTML =
+                book.course
+                    ? <p>${escapeHTML(book.course)}</p>
+                    : "";
+
+
+            const semesterHTML =
+                book.semester
+                    ? <p>${escapeHTML(book.semester)}</p>
+                    : "";
+
+
+            const locationHTML =
+                book.location
+                    ? <p>📍 ${escapeHTML(book.location)}</p>
+                    : "";
+
+
+            // ==========================================
+            // CARD HTML
+            // ==========================================
+
+            card.innerHTML = 
+
+                <div class="book-image purple">
+                    📚
+                </div>
+
+                <div class="book-info">
+
+                    <span class="tag">
+                        ${type}
+                    </span>
+
+                    <h3>
+                        ${escapeHTML(
+                            book.book_title || "Book"
+                        )}
+                    </h3>
+
+                    ${authorHTML}
+
+                    ${categoryHTML}
+
+                    ${courseHTML}
+
+                    ${semesterHTML}
+
+                    ${locationHTML}
+
+                    <div class="book-bottom">
+
+                        <strong>
+                            ${price}
+                        </strong>
+
+                        <button
+                            type="button"
+                            onclick="showBookDetails('${String(book.id).replace(/'/g, "\\'")}')">
+                            View
+                        </button>
+
+                    </div>
+
+                </div>
+
+            ;
+
+
+            bookGrid.appendChild(card);
+
+        });
 
     }
 
+    catch (error) {
 
-    // ==================================================
-    // LOAD BOOKS WHEN WEBSITE OPENS
-    // ==================================================
+        console.error(
+            "Books loading error:",
+            error
+        );
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-
-            loadBooks();
-
-        }
-    );
-
+        bookGrid.innerHTML =
+            "<p>Books load करते समय समस्या आई।</p>";
+    }
 }
+
+
+// ======================================================
+// HTML ESCAPE
+// ======================================================
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/'/g, "&#039;");
+}
+
+
+// ======================================================
+// LOAD BOOKS WHEN WEBSITE OPENS
+// ======================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        loadBooks();
+
+    }
+);
                 
-                    
