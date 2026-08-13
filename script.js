@@ -98,15 +98,8 @@ const SUPABASE_URL =
 
 const SUPABASE_KEY =
     "sb_publishable_RybHu-aZHpHct_aJyXYNrA_gr1IFfbD";
-
-
-let supabaseClient = null;
-
-
-if (typeof supabase !== "undefined") {
-
-    supabaseClient =
-        supabase.createClient(
+const supabaseClient =
+    supabase.createClient(
             SUPABASE_URL,
             SUPABASE_KEY
         );
