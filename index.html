@@ -296,221 +296,265 @@
     </small>
 
 </footer>
+    <!-- ================= SELL YOUR BOOK ================= -->
 
+<form id="sell-form"
+      class="form"
+      action="/sell-book"
+      method="POST">
 
-<!-- FORM MODAL -->
-<div class="modal" id="formModal">
-
-    <div class="form-box">
-
-        <button class="close" onclick="closeForm()">
-            ×
-        </button>
-
-
-        <div class="form-header">
-
-            <span id="formIcon">💰</span>
-
-            <div>
-                <p id="formType">
-                    SELL YOUR BOOK
-                </p>
-
-                <h2 id="formTitle">
-                    Sell Your Book
-                </h2>
-            </div>
-
+    <div class="form-header">
+        <div class="form-icon">📚</div>
+        <div>
+            <h2>Sell Your Book</h2>
+            <p>Give your book a new reader.</p>
         </div>
+    </div>
+
+    <div class="form-group">
+        <label for="sell_book_title">Book Title</label>
+        <input type="text"
+               id="sell_book_title"
+               name="book_title"
+               placeholder="Enter your book title"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="sell_author">Author</label>
+        <input type="text"
+               id="sell_author"
+               name="author"
+               placeholder="Enter author name">
+    </div>
+
+    <div class="form-group">
+        <label for="sell_category">Category</label>
+        <select id="sell_category" name="category" required>
+            <option value="">Select category</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Commerce">Commerce</option>
+            <option value="Arts">Arts</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="sell_course">Course</label>
+        <input type="text"
+               id="sell_course"
+               name="course"
+               placeholder="Example: B.Sc Mathematics">
+    </div>
+
+    <div class="form-group">
+        <label for="sell_semester">Semester / Year</label>
+        <input type="text"
+               id="sell_semester"
+               name="semester"
+               placeholder="Example: Semester 2">
+    </div>
+
+    <div class="form-group">
+        <label for="sell_condition">Book Condition</label>
+        <select id="sell_condition"
+                name="book_condition"
+                required>
+            <option value="">Select condition</option>
+            <option value="Like New">Like New</option>
+            <option value="Very Good">Very Good</option>
+            <option value="Good">Good</option>
+            <option value="Used">Used</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="sell_price">Price (₹)</label>
+        <input type="number"
+               id="sell_price"
+               name="price"
+               min="0"
+               step="0.01"
+               placeholder="Enter selling price"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="sell_location">Location</label>
+        <input type="text"
+               id="sell_location"
+               name="location"
+               placeholder="Enter your location">
+    </div>
+
+    <div class="form-group">
+        <label for="sell_contact">Contact Number</label>
+        <input type="tel"
+               id="sell_contact"
+               name="contact_number"
+               placeholder="Enter contact number"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="sell_description">Book Details</label>
+        <textarea id="sell_description"
+                  name="description"
+                  rows="4"
+                  placeholder="Enter your book details..."></textarea>
+    </div>
+
+    <input type="hidden"
+           name="listing_type"
+           value="sell">
+
+    <button type="submit" class="form-button">
+        Sell Your Book
+    </button>
+
+</form>
 
 
-        <p class="form-note" id="formNote">
-            Enter your book details below.
-        </p>
+<!-- ================= EXCHANGE BOOK ================= -->
+
+<form id="exchange-form"
+      class="form"
+      action="/exchange-book"
+      method="POST">
+
+    <div class="form-header">
+        <div class="form-icon">🔄</div>
+        <div>
+            <h2>Exchange Book</h2>
+            <p>Exchange your book with another reader.</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="exchange_book_title">Your Book Title</label>
+        <input type="text"
+               id="exchange_book_title"
+               name="book_title"
+               placeholder="Enter your book title"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="exchange_author">Author</label>
+        <input type="text"
+               id="exchange_author"
+               name="author"
+               placeholder="Enter author name">
+    </div>
+
+    <div class="form-group">
+        <label for="exchange_category">Category</label>
+        <select id="exchange_category"
+                name="category"
+                required>
+            <option value="">Select category</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Commerce">Commerce</option>
+            <option value="Arts">Arts</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="exchange_course">Course</label>
+        <input type="text"
+               id="exchange_course"
+               name="course"
+               placeholder="Example: B.Sc Mathematics">
+    </div>
+
+    <div class="form-group">
+        <label for="exchange_semester">Semester / Year</label>
+        <input type="text"
+               id="exchange_semester"
+               name="semester"
+               placeholder="Example: Semester 2">
+    </div>
+
+    <div class="form-group">
+        <label for="exchange_condition">Book Condition</label>
+        <select id="exchange_condition"
+                name="book_condition"
+                required>
+            <option value="">Select condition</option>
+            <option value="Like New">Like New</option>
+            <option value="Very Good">Very Good</option>
+            <option value="Good">Good</option>
+            <option value="Used">Used</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="wanted_book">Book You Want in Exchange</label>
+        <input type="text"
+               id="wanted_book"
+               name="wanted_book"
+               placeholder="Which book do you want?"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="exchange_location">Location</label>
+        <input type="text"
+               id="exchange_location"
+               name="location"
+               placeholder="Enter your location">
+    </div>
+
+    <div class="form-group">
+        <label for="exchange_contact">Contact Number</label>
+        <input type="tel"
+               id="exchange_contact"
+               name="contact_number"
+               placeholder="Enter contact number"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="exchange_description">Book Details</label>
+        <textarea id="exchange_description"
+                  name="description"
+                  rows="4"
+                  placeholder="Enter your book details..."></textarea>
+    </div>
+
+    <input type="hidden"
+           name="listing_type"
+           value="exchange">
+
+    <button type="submit" class="form-button">
+        Exchange Book
+    </button>
+
+</form>
 
 
-        <form id="bookForm">
+<!-- ================= DONATE BOOK ================= -->
 
-            <label>
-                Book Title *
-            </label>
+<form id="donate-form"
+      class="form"
+      action="/donate-book"
+      method="POST">
 
-            <input
-                type="text"
-                id="bookTitle"
-                placeholder="Enter book name"
-                required
-            >
-
-
-            <label>
-                Author
-            </label>
-
-            <input
-                type="text"
-                id="author"
-                placeholder="Author name"
-            >
-
-
-            <div class="two">
-
-                <div>
-
-                    <label>
-                        Category
-                    </label>
-
-                    <input
-                        type="text"
-                        id="category"
-                        placeholder="Mathematics"
-                    >
-
-                </div>
-
-
-                <div>
-
-                    <label>
-                        Course / Class
-                    </label>
-
-                    <input
-                        type="text"
-                        id="course"
-                        placeholder="B.Sc / Class 12"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="two">
-
-                <div>
-
-                    <label>
-                        Semester
-                    </label>
-
-                    <input
-                        type="text"
-                        id="semester"
-                        placeholder="Semester"
-                    >
-
-                </div>
-
-
-                <div>
-
-                    <label>
-                        Condition
-                    </label>
-
-                    <select id="condition">
-
-                        <option>
-                            Like New
-                        </option>
-
-                        <option>
-                            Very Good
-                        </option>
-
-                        <option>
-                            Good
-                        </option>
-
-                        <option>
-                            Used
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-
-            <!-- PRICE -->
-
-            <div id="priceField">
-                <label>
-                    Price ₹
-                </label>
-
-                <input
-                    type="number"
-                    id="price"
-                    placeholder="Enter expected price"
-                >
-
-            </div>
-
-
-            <!-- WANTED BOOK -->
-
-            <div id="wantedField" class="hide">
-
-                <label>
-                    🔄 Which book do you want?
-                </label>
-
-                <input
-                    type="text"
-                    id="wantedBook"
-                    placeholder="Book you want in exchange"
-                >
-
-            </div>
-
-
-            <label>
-                📍 Location
-            </label>
-
-            <input
-                type="text"
-                id="location"
-                placeholder="City / College / Area"
-            >
-
-
-            <label>
-                📞 Contact Number *
-            </label>
-
-            <input
-                type="tel"
-                id="contact"
-                placeholder="Your mobile number"
-                required
-            >
-
-
-            <label>
-                Description
-            </label>
-
-            <textarea
-                id="description"
-                placeholder="Tell something about your book..."
-            ></textarea>
-
-
-            <button
-                type="submit"
-                class="submit-btn"
-            >
-                Submit Listing →
-            </button>
-
-        </form>
+    <div class="form-header">
+        <div class="form-icon">❤️</div>
+        <div>
+            <h2>Donate Book</h2>
+            <p>Donate your book and help another reader.</p>
+        </div>
+    </div>
 
 
         <div
@@ -537,10 +581,104 @@
         </div>
 
     </div>
+    <div class="form-group">
+        <label for="donate_book_title">Book Title</label>
+        <input type="text"
+               id="donate_book_title"
+               name="book_title"
+               placeholder="Enter your book title"
+               required>
+    </div>
 
+    <div class="form-group">
+        <label for="donate_author">Author</label>
+        <input type="text"
+               id="donate_author"
+               name="author"
+               placeholder="Enter author name">
+    </div>
+
+    <div class="form-group">
+        <label for="donate_category">Category</label>
+        <select id="donate_category"
+                name="category"
+                required>
+            <option value="">Select category</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Commerce">Commerce</option>
+            <option value="Arts">Arts</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="donate_course">Course</label>
+        <input type="text"
+               id="donate_course"
+               name="course"
+               placeholder="Example: B.Sc Mathematics">
+    </div>
+
+    <div class="form-group">
+        <label for="donate_semester">Semester / Year</label>
+        <input type="text"
+               id="donate_semester"
+               name="semester"
+               placeholder="Example: Semester 2">
+    </div>
+
+    <div class="form-group">
+        <label for="donate_condition">Book Condition</label>
+        <select id="donate_condition"
+                name="book_condition"
+                required>
+            <option value="">Select condition</option>
+            <option value="Like New">Like New</option>
+            <option value="Very Good">Very Good</option>
+            <option value="Good">Good</option>
+            <option value="Used">Used</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="donate_location">Location</label>
+        <input type="text"
+               id="donate_location"
+               name="location"
+               placeholder="Enter your location">
+    </div>
+
+    <div class="form-group">
+        <label for="donate_contact">Contact Number</label>
+        <input type="tel"
+               id="donate_contact"
+               name="contact_number"
+               placeholder="Enter contact number"
+               required>
+    </div>
+
+    <div class="form-group">
+        <label for="donate_description">Book Details</label>
+        <textarea id="donate_description"
+                  name="description"
+                  rows="4"
+                  placeholder="Enter your book details..."></textarea>
+    </div>
+
+    <input type="hidden"
+           name="listing_type"
+           value="donate">
+
+    <button type="submit" class="form-button">
+        Donate Book
+    </button>
+
+</form>
 </div>
-
-
 <script src="script.js"></script>
 
 </body>
