@@ -571,3 +571,21 @@ function escapeHTML(value){
 ========================================= */
 
 loadBooks();
+function openForm(type) {
+
+    document.querySelectorAll(".popup-form").forEach(function(form) {
+        form.classList.remove("active");
+    });
+
+    const selectedForm = document.getElementById(type + "-form");
+
+    if (selectedForm) {
+        selectedForm.classList.add("active");
+    }
+}
+
+function closeForm() {
+    document.querySelectorAll(".popup-form").forEach(function(form) {
+        form.classList.remove("active");
+    });
+}
