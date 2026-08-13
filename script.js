@@ -153,6 +153,105 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
         });
+        // ======================================
+// SUPABASE SE BOOKS EXPLORE MEIN DIKHAYEN
+// ======================================
+
+async function loadBooks() {
+
+    const bookGrid = document.getElementById("bookGrid");
+
+    if (!bookGrid) return;
+
+    bookGrid.innerHTML = "<p>Loading books...</p>";
+
+    const { data: books, error } = await supabaseClient
+        .from("books")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+
+        console.error(error);
+
+        bookGrid.innerHTML =
+            "<p>Books load नहीं हो सकीं।</p>";
+
+        return;
+    }
+
+    if (!books || books.length === 0) {
+
+        bookGrid.innerHTML =
+            "<p>अभी कोई book listed नहीं है।</p>";
+
+        return;
+    }
+
+    bookGrid.innerHTML = "";
+
+    books.forEach(function(book) {
+
+        const card = document.createElement("div");
+
+        card.className = "book-card";
+
+        let type = "";
+
+        if (book.listing_type === "sell") {
+            type = "FOR SALE";
+        } else if (book.listing_type === "exchange") {
+            type = "EXCHANGE";
+        } else if (book.listing_type === "donate") {
+            type = "DONATE";
+        }
+
+        let price = "";
+
+        if (book.listing_type === "sell" && book.price != null) {
+            price = "₹" + book.price;
+        } else if (book.listing_type === "exchange") {
+            price = "Exchange";
+        } else if (book.listing_type === "donate") {
+            price = "Free";
+        }
+
+        card.innerHTML = 
+            <div class="book-image purple">
+                📚
+            </div>
+
+            <div class="book-info">
+
+                <span class="tag">${type}</span>
+
+                <h3>${book.book_title || ""}</h3>
+
+                <p>${book.author || ""}</p>
+
+                <p>${book.category || ""}</p>
+
+                <p>${book.course || ""}</p>
+
+                <p>📍 ${book.location || ""}</p>
+
+                <div class="book-bottom">
+
+                    <strong>${price}</strong>
+
+                    <button type="button">
+                        View
+                    </button>
+
+                </div>
+
+            </div>
+        ;
+
+        bookGrid.appendChild(card);
+
+    });
+}
 
     });
 
