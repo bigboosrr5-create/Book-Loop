@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>BookLoop | Book Details</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+/* =========================
+   RESET
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#172033;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    height:72px;
+    background:#ffffff;
+    border-bottom:1px solid #e7eaf0;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 6%;
+
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:800;
+    color:#2457d6;
+}
+
+.logo span{
+    color:#172033;
+}
+
+.back-btn{
+    text-decoration:none;
+    color:#4b5563;
+    font-weight:600;
+
+    padding:10px 16px;
+    border-radius:10px;
+}
+
+.back-btn:hover{
+    background:#f1f4f8;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container{
+    width:92%;
+    max-width:1200px;
+    margin:35px auto;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard{
+    background:#ffffff;
+    border-radius:26px;
+    overflow:hidden;
+
+    box-shadow:
+        0 18px 55px rgba(25,40,70,.09);
+}
+
+/* =========================
+   TOP
+========================= */
+
+.top-section{
+
+    display:grid;
+
+    grid-template-columns:370px 1fr;
+
+    gap:50px;
+
+    padding:45px;
+}
+
+/* =========================
+   BOOK COVER
+========================= */
+
+.cover-area{
+
+    min-height:440px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #edf2ff,
+            #f8faff
+        );
+
+    border-radius:22px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.book-cover{
+
+    width:235px;
+    height:340px;
+
+    border-radius:
+        10px 18px 18px 10px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #315edb,
+            #173a9b
+        );
+
+    color:white;
+
+    display:flex;
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    padding:25px;
+
+    box-shadow:
+        20px 25px 35px
+        rgba(25,50,120,.25);
+}
+
+.book-cover h2{
+    font-size:30px;
+    margin-bottom:12px;
+}
+
+.book-cover p{
+    opacity:.85;
+    margin-bottom:10px;
+}
+
+/* =========================
+   DETAILS
+========================= */
+
+.book-info{
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.category{
+
+    width:max-content;
+
+    background:#edf3ff;
+    color:#2457d6;
+
+    padding:7px 14px;
+
+    border-radius:30px;
+
+    font-size:12px;
+    font-weight:700;
+
+    margin-bottom:15px;
+}
+
+.book-title{
+
+    font-size:44px;
+
+    line-height:1.1;
+
+    margin-bottom:8px;
+}
+
+.author{
+
+    color:#6d7685;
+
+    font-size:17px;
+
+    margin-bottom:27px;
+}
+
+/* =========================
+   PRICE
+========================= */
+
+.price-row{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    margin-bottom:30px;
+}
+
+.price{
+
+    font-size:38px;
+
+    font-weight:800;
+}
+
+.condition{
+
+    background:#e9f8ef;
+
+    color:#168348;
+
+    padding:8px 14px;
+
+    border-radius:30px;
+
+    font-size:12px;
+
+    font-weight:700;
+}
+
+/* =========================
+   INFORMATION
+========================= */
+
+.info-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:14px;
+}
+
+.info-card{
+
+    background:#fafbfc;
+
+    border:1px solid #edf0f4;
+
+    padding:17px;
+
+    border-radius:15px;
+}
+
+.info-label{
+
+    color:#9098a7;
+
+    font-size:10px;
+
+    font-weight:700;
+
+    margin-bottom:7px;
+
+    letter-spacing:.5px;
+}
+
+.info-value{
+
+    font-weight:700;
+
+    font-size:15px;
+}
+
+/* =========================
+   DIVIDER
+========================= */
+
+.divider{
+
+    height:1px;
+
+    background:#edf0f4;
+}
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.section{
+
+    padding:35px 45px;
+}.section-title{
+
+    font-size:21px;
+
+    margin-bottom:15px;
+}
+
+.description{
+
+    color:#687386;
+
+    line-height:1.8;
+
+    font-size:15px;
+}
+
+/* =========================
+   OWNER
+========================= */
+
+.owner{
+
+    margin:
+        0 45px 35px;
+
+    padding:25px;
+
+    border:
+        1px solid #e5ebfa;
+
+    background:#f8faff;
+
+    border-radius:18px;
+}
+
+.owner-heading{
+
+    font-size:19px;
+
+    font-weight:700;
+
+    margin-bottom:7px;
+}
+
+.owner-text{
+
+    color:#7b8493;
+
+    font-size:14px;
+
+    margin-bottom:20px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.actions{
+
+    display:flex;
+
+    gap:12px;
+}
+
+.btn{
+
+    border:none;
+
+    padding:14px 22px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    font-size:14px;
+
+    transition:.2s;
+}
+
+.btn-primary{
+
+    background:#2457d6;
+
+    color:white;
+}
+
+.btn-primary:hover{
+
+    background:#1948c0;
+
+    transform:
+        translateY(-2px);
+}
+
+.btn-secondary{
+
+    background:white;
+
+    color:#2457d6;
+
+    border:
+        1px solid #d9e2fa;
+}
+
+.btn-secondary:hover{
+
+    background:#f0f4ff;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading{
+
+    padding:120px 20px;
+
+    text-align:center;
+
+    color:#697386;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.error{
+
+    padding:100px 20px;
+
+    text-align:center;
+
+    color:#dc2626;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+
+    text-align:center;
+
+    color:#9aa2af;
+
+    font-size:12px;
+
+    padding:
+        0 20px 30px;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media(max-width:850px){
+
+    .top-section{
+
+        grid-template-columns:1fr;
+
+        padding:28px;
+
+        gap:28px;
+    }
+
+    .book-title{
+
+        font-size:34px;
+    }
+
+    .section{
+
+        padding:
+            30px 28px;
+    }
+
+    .owner{
+
+        margin:
+            0 28px 30px;
+    }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:520px){
+
+    .header{
+
+        padding:
+            0 20px;
+    }
+
+    .logo{
+
+        font-size:21px;
+    }
+
+    .container{
+
+        width:94%;
+
+        margin:
+            20px auto;
+    }
+
+    .dashboard{
+
+        border-radius:20px;
+    }
+
+    .top-section{
+
+        padding:20px;
+    }
+
+    .cover-area{
+
+        min-height:320px;
+    }
+
+    .book-cover{
+
+        width:185px;
+
+        height:270px;
+    }
+
+    .book-cover h2{
+
+        font-size:24px;
+    }
+
+    .book-title{
+
+        font-size:29px;
+    }
+
+    .info-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .section{
+
+        padding:
+            25px 20px;
+    }
+
+    .owner{
+
+        margin:
+            0 20px 25px;
+    }
+
+    .actions{
+
+        flex-direction:column;
+    }
+
+    .btn{
+
+        width:100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <div class="logo">
+
+        Book<span>Loop</span>
+
+    </div>
+
+
+    <a
+        href="index.html"
+        class="back-btn">
+
+        ← Back
+
+    </a>
+
+</header>
+
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="container">
+
+
+    <div
+        class="dashboard"
+        id="dashboard">
+
+
+        <div class="loading">
+
+            Loading book details...
+
+        </div>
+
+
+    </div>
+
+
+</main>
+
+
+
+<script>
+
+/* ==========================================
+   SUPABASE
+========================================== */
+
+
+/*
+   IMPORTANT:
+
+   नीचे अपनी existing BookLoop website
+   में इस्तेमाल हो रही SAME Supabase
+   Project URL डालें।
+*/
+
+const SUPABASE_URL =
+"https://ewammndvxdenjrhaazsh.supabase.co/rest/v1/";
+
+
+/*
+   यहाँ आपकी Publishable Key डालें।
+
+   SECRET KEY बिल्कुल नहीं डालनी है।
+*/
+
+const SUPABASE_KEY =
+"sb_publishable_RybHu-aZHpHct_aJyXYNrA_gr1IFfbD";
+
+
+const db =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+
+/* ==========================================
+   GET ID FROM URL
+========================================== */
+
+const params =
+new URLSearchParams(
+    window.location.search
+);const bookId =
+params.get("id");
+
+
+
+/* ==========================================
+   LOAD BOOK
+========================================== */
+
+async function loadBook(){
+
+
+    if(!bookId){
+
+        showError(
+            "Book ID is missing."
+        );
+
+        return;
+    }
+
+
+    const {
+
+        data,
+        error
+
+    } = await db
+
+        .from("books")
+
+        .select("*")
+
+        .eq("id", bookId)
+
+        .single();
+
+
+
+    if(error){
+
+        console.error(error);
+
+        showError(
+            "Unable to load book details."
+        );
+
+        return;
+    }
+
+
+    if(!data){
+
+        showError(
+            "Book not found."
+        );
+
+        return;
+    }
+
+
+    renderBook(data);
+
+}
+
+
+
+/* ==========================================
+   GET VALUE
+========================================== */
+
+function getValue(
+    object,
+    names
+){
+
+    for(
+        const name of names
+    ){
+
+        if(
+
+            object[name] !==
+            undefined &&
+
+            object[name] !==
+            null &&
+
+            object[name] !== ""
+
+        ){
+
+            return object[name];
+
+        }
+
+    }
+
+    return "";
+
+}
+
+
+
+/* ==========================================
+   SHOW BOOK
+========================================== */
+
+function renderBook(book){
+
+
+    const name =
+        getValue(
+            book,
+            [
+                "book_name",
+                "bookname",
+                "title",
+                "name"
+            ]
+        );
+
+
+    const author =
+        getValue(
+            book,
+            [
+                "author",
+                "book_author"
+            ]
+        );
+
+
+    const category =
+        getValue(
+            book,
+            [
+                "category",
+                "genre"
+            ]
+        );
+
+
+    const course =
+        getValue(
+            book,
+            [
+                "course"
+            ]
+        );
+
+
+    const semester =
+        getValue(
+            book,
+            [
+                "semester"
+            ]
+        );
+
+
+    const condition =
+        getValue(
+            book,
+            [
+                "condition",
+                "book_condition"
+            ]
+        );
+
+
+    const price =
+        getValue(
+            book,
+            [
+                "price"
+            ]
+        );
+
+
+    const location =
+        getValue(
+            book,
+            [
+                "location",
+                "city"
+            ]
+        );
+
+
+    const description =
+        getValue(
+            book,
+            [
+                "description",
+                "details"
+            ]
+        );
+
+
+
+    document
+        .getElementById("dashboard")
+        .innerHTML = `
+
+
+        <section class="top-section">
+
+
+            <!-- BOOK COVER -->
+
+            <div class="cover-area">
+
+
+                <div class="book-cover">
+
+
+                    <h2>
+
+                        ${safe(
+                            name ||
+                            "Book"
+                        )}
+
+                    </h2>
+
+
+                    <p>
+
+                        ${safe(
+                            category ||
+                            "Book"
+                        )}
+
+                    </p>
+
+
+                    <small>
+
+                        ${safe(
+                            course ||
+                            ""
+                        )}
+
+                    </small>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- DETAILS -->
+
+            <div class="book-info">
+
+
+                <span class="category">
+
+                    ${safe(
+                        category ||
+                        "Book"
+                    )}
+
+                </span>
+
+
+
+                <h1 class="book-title">
+
+                    ${safe(
+                        name ||
+                        "Untitled Book"
+                    )}
+
+                </h1>
+
+
+
+                <p class="author">
+
+                    By
+
+                    <strong>
+                    ${safe(
+                            author ||
+                            "Unknown Author"
+                        )}
+
+                    </strong>
+
+                </p>
+
+
+
+                <div class="price-row">
+
+
+                    <div class="price">
+
+                        ₹${safe(
+                            price ||
+                            "0"
+                        )}
+
+                    </div>
+
+
+                    <div class="condition">
+
+                        ● ${safe(
+                            condition ||
+                            "Good"
+                        )}
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- BOOK INFORMATION -->
+
+                <div class="info-grid">
+
+
+                    <div class="info-card">
+
+                        <div class="info-label">
+
+                            COURSE
+
+                        </div>
+
+                        <div class="info-value">
+
+                            ${safe(
+                                course ||
+                                "-"
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="info-card">
+
+                        <div class="info-label">
+
+                            SEMESTER
+
+                        </div>
+
+                        <div class="info-value">
+
+                            ${safe(
+                                semester ||
+                                "-"
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="info-card">
+
+                        <div class="info-label">
+
+                            CATEGORY
+
+                        </div>
+
+                        <div class="info-value">
+
+                            ${safe(
+                                category ||
+                                "-"
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="info-card">
+
+                        <div class="info-label">
+
+                            LOCATION
+
+                        </div>
+
+                        <div class="info-value">
+
+                            ${safe(
+                                location ||
+                                "-"
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <div class="divider"></div>
+
+
+
+        <!-- DESCRIPTION -->
+
+        <section class="section">
+
+
+            <h2 class="section-title">
+
+                About this Book
+
+            </h2>
+
+
+            <p class="description">
+
+                ${safe(
+                    description ||
+                    "No description available."
+                )}
+
+            </p>
+
+
+        </section>
+
+
+
+        <!-- OWNER -->
+
+        <section class="owner">
+
+
+            <div class="owner-heading">
+
+                Book Owner
+
+            </div>
+
+
+            <div class="owner-text">
+
+                Interested in this book?
+                Send a request to the owner.
+
+            </div>
+
+
+
+            <div class="actions">
+
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="contactOwner()">
+
+                    Contact Owner
+
+                </button>
+
+
+
+                <button
+                    class="btn btn-primary"
+                    onclick="requestBook()">
+
+                    Interested in this Book
+
+                </button>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <div class="footer">
+
+            BookLoop • Buy • Sell • Exchange • Donate
+
+        </div>
+
+
+    `;
+
+}
+
+
+
+/* ==========================================
+   SECURITY
+========================================== */
+
+function safe(value){
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+  .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+function contactOwner(){
+
+    window.location.href =
+        "interest.html?id=" +
+        encodeURIComponent(
+            bookId
+        );
+
+}
+
+
+function requestBook(){
+
+    window.location.href =
+        "interest.html?id=" +
+        encodeURIComponent(
+            bookId
+        );
+
+}
+
+
+
+/* ==========================================
+   ERROR
+========================================== */
+
+function showError(message){
+
+    document
+        .getElementById("dashboard")
+        .innerHTML = 
+
+        <div class="error">
+
+            <h2>
+
+                ${safe(message)}
+
+            </h2>
+
+            <br>
+
+            <a href="index.html">
+
+                ← Back to Books
+
+            </a>
+
+        </div>
+
+    ;
+
+}
+
+
+
+/* ==========================================
+   START
+========================================== */
+
+loadBook();
+
+</script>
+
+
+</body>
+
+</html>
+                    
