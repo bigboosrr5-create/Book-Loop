@@ -697,17 +697,13 @@ supabase.createClient(
 const params =
 new URLSearchParams(
     window.location.search
-);const bookId =
+);
+
+const bookId =
 params.get("id");
 
-const {
-    data,
-    error
-} = await db
-    .from("books")
-    .select("*")
-    .eq("id", bookId)
-    .single();
+
+
 /* ==========================================
    LOAD BOOK
 ========================================== */
@@ -1289,7 +1285,7 @@ function showError(message){
 
     document
         .getElementById("dashboard")
-        .innerHTML = 
+        .innerHTML = `
 
         <div class="error">
 
@@ -1309,7 +1305,7 @@ function showError(message){
 
         </div>
 
-    ;
+    `;
 
 }
 
@@ -1327,4 +1323,3 @@ loadBook();
 </body>
 
 </html>
-                    
