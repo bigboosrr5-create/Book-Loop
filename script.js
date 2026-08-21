@@ -233,3 +233,14 @@ function escapeHTML(value) {
 document.addEventListener("DOMContentLoaded", function () {
     loadBooks();
 });
+function showBookDetails(id) {
+
+    if (!id) {
+        console.error("Book ID नहीं मिली।");
+        return;
+    }
+
+    window.location.href =
+        "book-details.html?id=" +
+        encodeURIComponent(id);
+}
