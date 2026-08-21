@@ -700,8 +700,14 @@ new URLSearchParams(
 );const bookId =
 params.get("id");
 
-
-
+const {
+    data,
+    error
+} = await db
+    .from("books")
+    .select("*")
+    .eq("id", bookId)
+    .single();
 /* ==========================================
    LOAD BOOK
 ========================================== */
